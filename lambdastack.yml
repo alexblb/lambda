@@ -1,0 +1,24 @@
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: awsbuckets3alexendava
+  MyS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub 'arn:aws:s3:::${MyS3Bucket}/*'
+      Bucket: !Ref MyS3Bucket
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub lambdafun
+      Handler: index.handler
+      Role: arn:aws:iam::673825392936:role/lambdas3
+      Runtime: python3.7
+    DependsOn: MyS3Bucket
